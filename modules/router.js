@@ -1,22 +1,40 @@
 // Import modules
-import { renderHome } from "./render.js";
-import api from "./api.js";
+import { renderReposSection } from "./render.js";
+import { renderContactSection } from "./render.js";
 
 async function router() {
     // Check hash
     const hash = window.location.hash.slice(1);
-  
-    const display = document.querySelector('main');
+    const renderView = document.querySelector('#render-view');
+    const repoList = document.querySelector('.repo-list');
+    const contactContainer = document.querySelector('.contact-container');
   
     switch (hash) {
-      //If hash has not been set, display home page
+      //If hash has not been set, display repo section
       case "":
-        display.textContent = "Welkom!";
-        const repos = await api.getRepositories();
-        renderHome(repos);
+        if (!contactContainer && !repoList) {
+          renderReposSection();
+        } else if (contactContainer) {
+          renderView.removeChild(contactContainer);
+          renderReposSection();
+        } else {
+          console.log('Error');
+        }
+        break;
+
+      //If hash is set to #contact, display contact section
+      case "contact":
+        if (!repoList && !contactContainer) {
+          renderContactSection();
+        } else if (repoList) {
+          renderView.removeChild(repoList);
+          renderContactSection();
+        } else {
+          console.log('Error');
+        }
         break;
     }
-  };
+  }
 
 //Call the router funtion when the hash is altered
 window.addEventListener('hashchange', router);

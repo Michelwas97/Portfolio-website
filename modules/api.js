@@ -12,7 +12,7 @@ async function getRepositories() {
           return {
             name: repo.name,
             description: repo.description,
-            url: repo.url
+            url: repo.html_url
           };
         });
         return newArray;
@@ -24,7 +24,33 @@ async function getRepositories() {
     }
   }
 
+  async function getProfile() {
+    //Try to fetch data from github api
+      try {
+        const url = "https://api.github.com/users/Michelwas97";
+        const response = await fetch(url);
+    
+        // Check if response is ok
+        if (response.status >= 200 && response.status <= 299) {
+          // const data = await response.json();
+          const newArray = response.json((profile) => {
+            return {
+              email: profile.email,
+              company: profile.company,
+              profile: profile.login
+            };
+          });
+          return newArray;
+        }
+  
+        // Catch errors
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
 //Export modules
 export default {
-    getRepositories
+    getRepositories,
+    getProfile
 }
